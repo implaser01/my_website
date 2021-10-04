@@ -1,6 +1,6 @@
 baseURL: http://example.org/
 languageCode: en-us
-title: Forty
+title: Portfolio website for Dhruv Raghunath
 theme: forty
 googleAnalytics: ''
 disqusShortname: ''
@@ -10,13 +10,13 @@ params:
     subtitle: |-
       A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
       AND RELEASED UNDER THE CREATIVE COMMONS.
-    title: Hi, my name is Forty
+    title: Hi, my name is Dhruv Raghunath
   blog: {}
   contact:
     address:
-      - city: City, ST 00000
-        country: Country
-        street: Street
+      - city: London
+        country: United Kingdom
+        street: 133B Harley Street
         title: Address
     buttonClear: Clear
     buttonSend: Send message
@@ -56,7 +56,7 @@ params:
         url: https://www.github.com
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com
+        url: https://www.linkedin.com/in/dhruvraghunath/
   image: ''
   name: Your name
   navigation:
