@@ -65,7 +65,7 @@ params:
     #    url: blogs/ipsum
      # - name: Elements
     #    url: elements.html
-    menu: Menu
+  #  menu: Menu
     subtitle: By HTML5 Up
     title: Forty
   tiles:
