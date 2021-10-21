@@ -51,7 +51,7 @@ library(ggtext)
 I will be performing a cluster analysis and K-means analysis on college acceptance data based on instate tuition rates and on `AcceptanceRate`, `Outofstate_tuition`, and `Graduation_rate`. This analysis was originally submitted as an assignment for my Business Analytics & Modeling class and has been slightly altered.
 
 ```{r}
-colleges <- read.csv('Colleges.csv', header = T, as.is = T)
+colleges <- read_csv(here::here("data","Colleges.csv"))
 ```
 
 ```{r}
