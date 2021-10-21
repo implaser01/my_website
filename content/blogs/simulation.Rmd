@@ -50,6 +50,8 @@ library(rvest)
 library(ggtext)
 ```
 
+In this code, I will be simulating the cost of health care plans for an employer for the next 10 months based on historical data
+
 ```{r}
 #setting seed
 set.seed(2)
