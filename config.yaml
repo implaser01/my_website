@@ -81,11 +81,11 @@ params:
   tiles:
     enable: yes
     showcase:
-      - image: NaviMumbai.jpg
-        subtitle: Navi Mumbai, India
-        title: Where am I from?
-        url: blogs/hometown
-      - image: FourFront.jpg
+      - image: Headshot.jpg
+        subtitle: Current Resume
+        title: My Experience
+        url: blogs/resume
+      - image: house.jfif
         subtitle: Linear Regression
         title: House Prices
         url: blogs/House
