@@ -1,0 +1,157 @@
+---
+categories:  
+- ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
+- ""
+date: "2021-10-21"
+description: Simulation of cost of health care plan for employees # the title that will show up once someone gets to this page
+draft: false
+image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: House # slug is the shorthand URL address... no spaces plz
+title: Simulation of cost of health care plan for employees
+---
+  
+
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+library(infer)
+library(grid)
+library(ggpubr)
+library(rvest)
+library(ggtext)
+library(forecast)
+```
+
+In this code, I will be simulating the cost of health care plans for an employer for the next 10 months based on historical data
+
+```{r}
+### Problem 1
+##question 1
+
+home_data <- read_csv(here::here("data","West_Roxbury_Modified-1.csv"))
+home_data$FLOORS <- as.factor(home_data$FLOORS)
+
+##question 2
+home_data$AGE <- c()
+home_data$AGE <- 2020 - home_data$YR.BUILT
+
+##question 3
+train_size <- .7*nrow(home_data)
+
+set.seed(500)
+
+train_index <- sample(x = 1:nrow(home_data), size = train_size, replace = F)
+
+train_set <- home_data[train_index, ]
+valid_set <- home_data[-train_index, ]
+
+train_set
+valid_set
+
+##question 4
+
+home_model <- lm(TOTAL.VALUE ~ GROSS.AREA + AGE + FLOORS, train_set) 
+summary(home_model)
+##question 5
+#With an increase of 1 unit of Gross Area, the Total Value of the house increases by 0.08285
+#With an increase of I year of Age of the house, the total value of the house decreases by 0.44173
+#If the house has 1.5 floors, its total value is 5.32 higher than a house with 1 floor if everything else remains the same
+#If the house has 2 floors, its total value is 60.79467 higher than a house with 1 floor if everything else remains the same
+#If the house has 2.5 floors, its total value is 87.74012 higher than a house with 1 floor if everything else remains the same
+#Gross Area, Age, 2 floors and 2.5 floors are significant as they have a p value lower than 0.05%
+
+##question 6
+
+pred_value <- predict(object = home_model, newdata = valid_set)
+pred_value_train <- predict(object = home_model, newdata = train_set)
+
+accuracy(pred_value, valid_set$TOTAL.VALUE)
+accuracy(pred_value_train, train_set$TOTAL.VALUE)
+
+##question 7
+#Since there is barely any difference between the RMSE of the model with the 
+#training and the validation data set, we can conclude that the linear regression
+#model is not over fitting.
+
+###Problem 2
+##question 1
+
+home_data2 <- home_data
+median_value <- median(home_data2$TOTAL.VALUE)
+home_data2$EXPENSIVE <- ifelse(home_data2$TOTAL.VALUE > median_value,1,0)
+
+##question 2
+boxplot(home_data2$LIVING.AREA ~ home_data2$EXPENSIVE)
+boxplot(home_data2$AGE ~ home_data2$EXPENSIVE)
+#We should use living Area as a predictor of Expensive.As shown in the box plot
+#houses that  are expensive tend to have a larger living area.
+#We should not use Age as a predictor of Expensive. As shown in the box plot
+#houses that that are expensive are only slightly higher in Age with severe 
+#outliers on both sides if they are expensive.
+
+##question 3
+table(home_data2$EXPENSIVE, home_data2$FLOORS)
+table(home_data2$EXPENSIVE, home_data2$REMODEL)
+#We should use floors as a predictor for expensive. This is because, as the floors 
+#increase, a higher percentage of houses in that category are expensive.
+#In houses with 1, 1.5, 2, and 2.5 floors, the chance of them being expensive were
+#16.94%, 28.07%, 68.09%, and 97.14% respectively.
+#We should use remodel as a predictor for expensive. This is because if the house
+#has been remodeled recently or in the past, it tends to have a higher likelihood
+#of being expensive. Houses that never had a remodel, had an old remodel, and have
+#recently had a remodel have 44.34%. 56.03%, and 74.2% chance of being expensive 
+#respectively.
+
+##question 4
+
+train_set2 <- home_data2[train_index, ]
+valid_set2 <- home_data2[-train_index, ]
+
+model1 <- glm(formula = EXPENSIVE ~ LIVING.AREA + FLOORS + REMODEL, 
+               data = train_set2, family = "binomial")
+pred_exp_prob <- predict(object = model1, newdata = valid_set2, 
+                          type = "response")
+cutoff <- 0.5
+pred_exp <- ifelse(pred_exp_prob>cutoff,1,0)
+sum(pred_exp)
+
+
+##question 5
+summary(model1)
+
+```
+
+The 95% confidence interval with the monthly premium of $150 is lower than the 95% confidence interval with the monthly premium of $147. This is because the increased monthly premium decreases the total cost expense thereby shifting the confidence interval downwards. 
+
+# Citation
+Raghunath, Dhruv. “DhruvRaghunath_A5.” 12 Oct. 2020. 
+

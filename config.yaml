@@ -86,16 +86,16 @@ params:
         title: Where am I from?
         url: blogs/hometown
       - image: FourFront.jpg
-        subtitle: Case Competitions I took part in as a student
-        title: Case Competitions
-        url: blogs/tempus
+        subtitle: Linear Regression
+        title: House Prices
+        url: blogs/House
       - image: keyboard.jpg
         subtitle: Projects I worked on in college
         title: R Projects
         url: blogs/risk_return
-      - image: pic04.jpg
-        subtitle: Cluster Analysis
-        title: US College Acceptance Rates
+      - image: red_cross.jfif
+        subtitle: Simulation
+        title: Cost of Healthcare Plan for Employer
         url: blogs/simulation
      # - image: pic05.jpg
     #    subtitle: Ipsum Dolor Sit Amet
