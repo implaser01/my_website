@@ -94,9 +94,9 @@ params:
         title: R Projects
         url: blogs/R
       - image: pic04.jpg
-        subtitle: Analysis created by 
-        title: AirBnB Price Analysis - Buenos Airies
-        url: blogs/risk_return
+        subtitle: Cluster Analysis
+        title: US College Acceptance Rates
+        url: blogs/college_acceptance
      # - image: pic05.jpg
     #    subtitle: Ipsum Dolor Sit Amet
     #    title: Consequat

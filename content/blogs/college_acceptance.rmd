@@ -1,0 +1,139 @@
+---
+title: "College Acceptance Rate"
+author: "Dhruv Raghunath"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+---
+
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+library(infer)
+library(grid)
+library(ggpubr)
+library(rvest)
+library(ggtext)
+```
+
+I will be performing a cluster analysis and K-means analysis on college acceptance data based on instate tuition rates and on `AcceptanceRate`, `Outofstate_tuition`, and `Graduation_rate`. This analysis was originally submitted as an assignment for my Business Analytics & Modeling class and has been slightly altered.
+
+```{r}
+colleges <- read.csv('Colleges.csv', header = T, as.is = T)
+```
+
+```{r}
+#Creating an empty vector
+colleges$AcceptanceRate <- c()
+
+#Calculating acceptance rates for every college
+for (i in 1:nrow(colleges)){
+  colleges$AcceptanceRate[i] <- colleges$App_accepted[i]/colleges$App_received[i]
+}
+
+#Creating a scatter plot of instate tuition and acceptance rate
+plot(colleges[, c('Instate_tuition', 'AcceptanceRate')]
+     , xlab = 'Instate_tuition'
+     , ylab = 'AcceptanceRate')
+
+#Standardizing columns in the dataset
+colleges_norm <- colleges
+for (i in 2:ncol(colleges)){
+  colleges_norm[,i] <- (colleges[, i] - mean(colleges[, i]))/sd(colleges[, i])
+}
+
+#Selecting only instate tuition and acceptance rate in the dataset
+colleges_norm <- colleges_norm[,c(10,17)]
+
+#Craeting a vector from 1 to 15
+k_vec <- 1:15
+
+#performing cluster analysis
+avgdis <- c()
+for (i in 1:length(k_vec)){
+  km<- kmeans(colleges_norm, centers = k_vec[i])
+  avgdis[i] <- mean(km$withinss)
+}
+avgdis
+
+#Plotting the cluster analysis
+plot(k_vec, avgdis,
+     xlab="Number of clusters, k",
+     ylab="Average within-clusters sum of squares")
+```
+Based on the plot above, I would use 5 clusters as the drop in sum of squares after the 5th cluster does is small
+
+
+
+# performing a k-means analysis
+```{r}
+#Setting seed
+set.seed(0)
+
+km_subset<- kmeans(colleges_norm[,1:2], centers = 5)
+```
+The total number of observations in each cluster are: 59, 25, 135, 75, and 95.
+The within cluster sum of squares by lusters are: 40.96, 20.79, 41.84, 24.61, and 38.57.
+The cluster with 135 observations has the most homogeneity.
+
+
+# Performing a cluster analysis using `AcceptanceRate`, `Outofstate_tuition`, and `Graduation_rate`
+```{r}
+colleges_norm2 <- colleges
+for (i in 2:ncol(colleges)){
+  colleges_norm2[,i] <- (colleges[, i] - mean(colleges[, i]))/sd(colleges[, i])
+}
+
+colleges_norm2 <- colleges_norm2[,c(11,16,17)]
+
+avgdis2 <- c()
+for (i in 1:length(k_vec)){
+  km2<- kmeans(colleges_norm2, centers = k_vec[i])
+  avgdis2[i] <- mean(km2$withinss)
+}
+avgdis2
+plot(k_vec, avgdis2,
+     xlab="Number of clusters, k",
+     ylab="Average within-clusters sum of squares")
+
+avgdis2[7]-avgdis2[8]
+avgdis2[8]-avgdis2[9]
+```
+I would choose to create eight clusters. This is because the fall in average within cluster sum of squares from eight to nine clusters is only 6.28 while the fall from seven to eight clusters was nearly twice as much at 11.02.
+
+
+# Citations
+Raghunath, Dhruv. “DhruvRaghunath_A8.” 19 Nov. 2020. 
+
