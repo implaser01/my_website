@@ -70,7 +70,7 @@ params:
       - name: Resume
         url: blogs/resume
       - name: House Prices
-        url: logs/house
+        url: blogs/house
       - name: Paint Mix
         url: blogs/optimization
       - name: Health Care Cost
