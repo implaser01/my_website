@@ -3,30 +3,28 @@ categories:
 - ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
 - ""
 date: "2021-10-21"
-description: Simulation of cost of health care plan for employees # the title that will show up once someone gets to this page
+description: Finding predictors of house prices # the title that will show up once someone gets to this page
 draft: false
 image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
 slug: House # slug is the shorthand URL address... no spaces plz
-title: Simulation of cost of health care plan for employees
+title: Finding predictors of house prices
 ---
 
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<p>In this code, I will be simulating the cost of health care plans for an employer for the next 10 months based on historical data</p>
-<pre class="r"><code>### Problem 1
-##question 1
-
+<pre class="r"><code>#downloading data provided by Professor Maryam Khatami 
 home_data &lt;- read_csv(here::here(&quot;data&quot;,&quot;West_Roxbury_Modified-1.csv&quot;))
+#Making fllor into factors
 home_data$FLOORS &lt;- as.factor(home_data$FLOORS)
 
-##question 2
+#Finding age of house
 home_data$AGE &lt;- c()
 home_data$AGE &lt;- 2020 - home_data$YR.BUILT
 
-##question 3
+#Creating train and validation dataset
 train_size &lt;- .7*nrow(home_data)
 
 set.seed(500)
@@ -70,7 +68,7 @@ train_set</code></pre>
 ## # ... with 1,729 more rows, and 8 more variables: BEDROOMS &lt;dbl&gt;,
 ## #   FULL BATH &lt;dbl&gt;, HALF BATH &lt;dbl&gt;, KITCHEN &lt;dbl&gt;, FIREPLACE &lt;dbl&gt;,
 ## #   REMODEL &lt;chr&gt;, RATING &lt;dbl&gt;, AGE &lt;dbl&gt;</code></pre>
-<pre class="r"><code>##question 4
+<pre class="r"><code>#Creating model
 
 home_model &lt;- lm(TOTAL.VALUE ~ GROSS.AREA + AGE + FLOORS, train_set) 
 summary(home_model)</code></pre>
@@ -96,15 +94,15 @@ summary(home_model)</code></pre>
 ## Residual standard error: 52.6 on 4051 degrees of freedom
 ## Multiple R-squared:  0.723,  Adjusted R-squared:  0.723 
 ## F-statistic: 2.11e+03 on 5 and 4051 DF,  p-value: &lt;2e-16</code></pre>
-<pre class="r"><code>##question 5
-#With an increase of 1 unit of Gross Area, the Total Value of the house increases by 0.08285
-#With an increase of I year of Age of the house, the total value of the house decreases by 0.44173
-#If the house has 1.5 floors, its total value is 5.32 higher than a house with 1 floor if everything else remains the same
-#If the house has 2 floors, its total value is 60.79467 higher than a house with 1 floor if everything else remains the same
-#If the house has 2.5 floors, its total value is 87.74012 higher than a house with 1 floor if everything else remains the same
-#Gross Area, Age, 2 floors and 2.5 floors are significant as they have a p value lower than 0.05%
-
-##question 6
+<div id="interpretation" class="section level1">
+<h1>Interpretation</h1>
+<p>With an increase of 1 unit of Gross Area, the Total Value of the house increases by 0.08285
+With an increase of I year of Age of the house, the total value of the house decreases by 0.44173
+If the house has 1.5 floors, its total value is 5.32 higher than a house with 1 floor if everything else remains the same
+If the house has 2 floors, its total value is 60.79467 higher than a house with 1 floor if everything else remains the same
+If the house has 2.5 floors, its total value is 87.74012 higher than a house with 1 floor if everything else remains the same
+Gross Area, Age, 2 floors and 2.5 floors are significant as they have a p value lower than 0.05%</p>
+<pre class="r"><code>#Checking the validity of the model and accuracy
 
 pred_value &lt;- predict(object = home_model, newdata = valid_set)
 pred_value_train &lt;- predict(object = home_model, newdata = train_set)
@@ -115,31 +113,27 @@ accuracy(pred_value, valid_set$TOTAL.VALUE)</code></pre>
 <pre class="r"><code>accuracy(pred_value_train, train_set$TOTAL.VALUE)</code></pre>
 <pre><code>##                ME RMSE  MAE   MPE MAPE
 ## Test set 4.06e-12 52.5 39.2 -1.62 10.2</code></pre>
-<pre class="r"><code>##question 7
-#Since there is barely any difference between the RMSE of the model with the 
-#training and the validation data set, we can conclude that the linear regression
-#model is not over fitting.
-
-###Problem 2
-##question 1
-
-home_data2 &lt;- home_data
+<p>Since there is barely any difference between the RMSE of the model with the
+training and the validation data set, we can conclude that the linear regression
+model is not over fitting.</p>
+</div>
+<div id="performing-logistic-regression" class="section level1">
+<h1>Performing Logistic Regression</h1>
+<pre class="r"><code>home_data2 &lt;- home_data
 median_value &lt;- median(home_data2$TOTAL.VALUE)
 home_data2$EXPENSIVE &lt;- ifelse(home_data2$TOTAL.VALUE &gt; median_value,1,0)
 
 ##question 2
 boxplot(home_data2$LIVING.AREA ~ home_data2$EXPENSIVE)</code></pre>
-<p><img src="/blogs/House_files/figure-html/unnamed-chunk-1-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/House_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>boxplot(home_data2$AGE ~ home_data2$EXPENSIVE)</code></pre>
-<p><img src="/blogs/House_files/figure-html/unnamed-chunk-1-2.png" width="648" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>#We should use living Area as a predictor of Expensive.As shown in the box plot
-#houses that  are expensive tend to have a larger living area.
-#We should not use Age as a predictor of Expensive. As shown in the box plot
-#houses that that are expensive are only slightly higher in Age with severe 
-#outliers on both sides if they are expensive.
-
-##question 3
-table(home_data2$EXPENSIVE, home_data2$FLOORS)</code></pre>
+<p><img src="/blogs/House_files/figure-html/unnamed-chunk-3-2.png" width="648" style="display: block; margin: auto;" />
+We should use living Area as a predictor of Expensive.As shown in the box plot
+houses that are expensive tend to have a larger living area.
+We should not use Age as a predictor of Expensive. As shown in the box plot
+houses that that are expensive are only slightly higher in Age with severe
+outliers on both sides if they are expensive.</p>
+<pre class="r"><code>table(home_data2$EXPENSIVE, home_data2$FLOORS)</code></pre>
 <pre><code>##    
 ##        1  1.5    2  2.5
 ##   0 1250  556 1089    3
@@ -149,18 +143,16 @@ table(home_data2$EXPENSIVE, home_data2$FLOORS)</code></pre>
 ##     None  Old Recent
 ##   0 2418  255    225
 ##   1 1926  325    647</code></pre>
-<pre class="r"><code>#We should use floors as a predictor for expensive. This is because, as the floors 
-#increase, a higher percentage of houses in that category are expensive.
-#In houses with 1, 1.5, 2, and 2.5 floors, the chance of them being expensive were
-#16.94%, 28.07%, 68.09%, and 97.14% respectively.
-#We should use remodel as a predictor for expensive. This is because if the house
-#has been remodeled recently or in the past, it tends to have a higher likelihood
-#of being expensive. Houses that never had a remodel, had an old remodel, and have
-#recently had a remodel have 44.34%. 56.03%, and 74.2% chance of being expensive 
-#respectively.
-
-##question 4
-
+<p>We should use floors as a predictor for expensive. This is because, as the floors
+increase, a higher percentage of houses in that category are expensive.
+In houses with 1, 1.5, 2, and 2.5 floors, the chance of them being expensive were
+16.94%, 28.07%, 68.09%, and 97.14% respectively.
+We should use remodel as a predictor for expensive. This is because if the house
+has been remodeled recently or in the past, it tends to have a higher likelihood
+of being expensive. Houses that never had a remodel, had an old remodel, and have
+recently had a remodel have 44.34%. 56.03%, and 74.2% chance of being expensive
+respectively.</p>
+<pre class="r"><code>#validating the model
 train_set2 &lt;- home_data2[train_index, ]
 valid_set2 &lt;- home_data2[-train_index, ]
 
@@ -202,8 +194,8 @@ summary(model1)</code></pre>
 ## AIC: 3270
 ## 
 ## Number of Fisher Scoring iterations: 6</code></pre>
-<p>The 95% confidence interval with the monthly premium of $150 is lower than the 95% confidence interval with the monthly premium of $147. This is because the increased monthly premium decreases the total cost expense thereby shifting the confidence interval downwards.</p>
+</div>
 <div id="citation" class="section level1">
 <h1>Citation</h1>
-<p>Raghunath, Dhruv. “DhruvRaghunath_A5.” 12 Oct. 2020.</p>
+<p>Raghunath, Dhruv. “DhruvRaghunath_A6.” 12 Oct. 2020.</p>
 </div>
