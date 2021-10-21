@@ -96,7 +96,7 @@ params:
       - image: pic04.jpg
         subtitle: Analysis created by 
         title: AirBnB Price Analysis - Buenos Airies
-        url: url: blogs/risk_return
+        url: blogs/risk_return
      # - image: pic05.jpg
     #    subtitle: Ipsum Dolor Sit Amet
     #    title: Consequat
