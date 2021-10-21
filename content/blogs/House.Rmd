@@ -156,5 +156,5 @@ summary(model1)
 
 
 # Citation
-Raghunath, Dhruv. “DhruvRaghunath_A6.” 12 Oct. 2020. 
+Raghunath, Dhruv. “DhruvRaghunath_A6.” 1 Nov. 2020. 
 

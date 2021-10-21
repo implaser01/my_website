@@ -89,10 +89,10 @@ params:
         subtitle: Linear Regression
         title: House Prices
         url: blogs/House
-      - image: keyboard.jpg
-        subtitle: Projects I worked on in college
-        title: R Projects
-        url: blogs/risk_return
+      - image: paint.jfif
+        subtitle: product mix of interior and exterior paints that maximizes the total daily profit
+        title: Optimization
+        url: blogs/optimization
       - image: red_cross.jfif
         subtitle: Simulation
         title: Cost of Healthcare Plan for Employer
