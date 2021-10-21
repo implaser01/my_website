@@ -67,14 +67,14 @@ params:
       - name: Log In
         url: '#'
     links:
-      - name: Home
-        url: '#'
-      - name: Blogs
-        url: blogs
-      - name: Generic Blog
-        url: blogs/ipsum
-      - name: Elements
-        url: elements.html
+      - name: Resume
+        url: blogs/resume
+      - name: House Prices
+        url: logs/House
+      - name: Paint Mix
+        url: blogs/optimization
+      - name: Health Care Cost
+        url: blogs/simulation
     menu: Menu
     subtitle: By HTML5 Up
     title: Forty
