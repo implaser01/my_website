@@ -92,7 +92,7 @@ params:
       - image: keyboard.jpg
         subtitle: Projects I worked on in college
         title: R Projects
-        url: blogs/R
+        url: blogs/risk_return
       - image: pic04.jpg
         subtitle: Cluster Analysis
         title: US College Acceptance Rates
