@@ -56,7 +56,7 @@ I will be performing a cluster analysis and K-means analysis on college acceptan
 colleges <- read_csv(here::here("data","Colleges.csv"))
 ```
 
-```{r}
+```{r,  message=FALSE, warning=FALSE, cache=TRUE}
 #Creating an empty vector
 colleges$AcceptanceRate <- c()
 
@@ -72,6 +72,7 @@ plot(colleges[, c('Instate_tuition', 'AcceptanceRate')]
 
 #Standardizing columns in the dataset
 colleges_norm <- colleges
+as.numeric(unlist(colleges_norm))
 for (i in 2:ncol(colleges)){
   colleges_norm[,i] <- (colleges[, i] - mean(colleges[, i]))/sd(colleges[, i])
 }

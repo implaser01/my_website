@@ -1,0 +1,112 @@
+---
+categories:  
+- ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
+- ""
+date: "2021-10-21"
+description: Cluster Means Analysis of College Acceptance Rates # the title that will show up once someone gets to this page
+draft: false
+image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: simulation # slug is the shorthand URL address... no spaces plz
+title: Cluster Means Analysis of College Acceptance Rates
+---
+  
+
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+library(infer)
+library(grid)
+library(ggpubr)
+library(rvest)
+library(ggtext)
+```
+
+```{r}
+#problem b
+set.seed(2)
+nsim <- 10000
+current_emp <- 19735
+current_avg_claim <- 224
+monthly_prem <- 147
+number_month <- 10
+budget <- 20000000
+vec_sim_cost_10000 <- c()
+cost_n <- c()
+
+for(i in 1:nsim){
+  for(j in 1:number_month){
+    
+    cost_n[j] <- current_emp*(1 + runif(n = 1, min = -0.02, max = 0.04))^j*
+      (current_avg_claim*(1 + rnorm(n = 1, mean = 0.005, sd = 0.01))^j - monthly_prem)
+    vec_sim_cost_10000[i] <- sum(cost_n)
+  }
+}
+vec_sim_cost_10000
+#problem c
+mean_cost_10000 <- mean(vec_sim_cost_10000)
+sd_cost_10000 <- sd(vec_sim_cost_10000)
+mean_cost_10000
+sd_cost_10000
+
+#problem d
+pct_budget_empty_147 <- sum(vec_sim_cost_10000>budget)/nsim
+pct_budget_empty_147
+
+#problem e
+set.seed(2)
+monthly_prem_alt <- 150
+vec_sim_cost_10000_alt <- c()
+cost_n_alt <- c()
+for(i in 1:nsim){
+  for(j in 1:number_month){
+    
+    cost_n_alt[j] <- current_emp*(1 + runif(n = 1, min = -0.02, max = .04))^j*
+      (current_avg_claim*(1+rnorm(n = 1, mean = 0.005, sd = 0.01))^j - monthly_prem_alt)
+    vec_sim_cost_10000_alt[i] <- sum(cost_n_alt)
+    
+  }
+}
+vec_sim_cost_10000_alt
+pct_budget_empty_150 <- sum(vec_sim_cost_10000_alt>budget)/nsim
+pct_budget_empty_150
+
+#problem f
+UB_147 <- mean_cost_10000 + 1.96*sd_cost_10000/sqrt(nsim)
+LB_147 <- mean_cost_10000 - 1.96*sd_cost_10000/sqrt(nsim)
+UB_150 <- mean(vec_sim_cost_10000_alt) + 1.96*sd(vec_sim_cost_10000_alt)/sqrt(nsim)
+LB_150 <- mean(vec_sim_cost_10000_alt) - 1.96*sd(vec_sim_cost_10000_alt)/sqrt(nsim)
+UB_147
+LB_147
+UB_150
+LB_150
+
+```

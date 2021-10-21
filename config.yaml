@@ -96,7 +96,7 @@ params:
       - image: pic04.jpg
         subtitle: Cluster Analysis
         title: US College Acceptance Rates
-        url: blogs/college_acceptance
+        url: blogs/simulation
      # - image: pic05.jpg
     #    subtitle: Ipsum Dolor Sit Amet
     #    title: Consequat
