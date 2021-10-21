@@ -3,13 +3,13 @@ categories:
 - ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
 - ""
 date: "2021-10-21"
-description: Cluster Means Analysis of College Acceptance Rates # the title that will show up once someone gets to this page
+description: Simulation of cost of health care plan for employees # the title that will show up once someone gets to this page
 draft: false
 image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
 slug: simulation # slug is the shorthand URL address... no spaces plz
-title: Cluster Means Analysis of College Acceptance Rates
+title: Simulation of cost of health care plan for employees
 ---
   
 
@@ -51,17 +51,29 @@ library(ggtext)
 ```
 
 ```{r}
-#problem b
+#setting seed
 set.seed(2)
+
+#setting number of simulations
 nsim <- 10000
+
+#current number of employees
 current_emp <- 19735
+#current average claim and premium 
 current_avg_claim <- 224
 monthly_prem <- 147
+
+#number of month simulation
 number_month <- 10
+
+#budget
 budget <- 20000000
+
+#creating empty vector
 vec_sim_cost_10000 <- c()
 cost_n <- c()
 
+#simulating cost based on historical data
 for(i in 1:nsim){
   for(j in 1:number_month){
     
@@ -70,8 +82,9 @@ for(i in 1:nsim){
     vec_sim_cost_10000[i] <- sum(cost_n)
   }
 }
-vec_sim_cost_10000
-#problem c
+
+#finding summary statistics of simulation results
+
 mean_cost_10000 <- mean(vec_sim_cost_10000)
 sd_cost_10000 <- sd(vec_sim_cost_10000)
 mean_cost_10000
@@ -81,7 +94,7 @@ sd_cost_10000
 pct_budget_empty_147 <- sum(vec_sim_cost_10000>budget)/nsim
 pct_budget_empty_147
 
-#problem e
+#Simulation where monthly premium rises to 150
 set.seed(2)
 monthly_prem_alt <- 150
 vec_sim_cost_10000_alt <- c()
@@ -95,7 +108,7 @@ for(i in 1:nsim){
     
   }
 }
-vec_sim_cost_10000_alt
+
 pct_budget_empty_150 <- sum(vec_sim_cost_10000_alt>budget)/nsim
 pct_budget_empty_150
 
@@ -111,3 +124,7 @@ LB_150
 
 ```
 
+The 95% confidence interval with the monthly premium of $150 is lower than the 95% confidence interval with the monthly premium of $147. This is because the increased monthly premium decreases the total cost expense thereby shifting the confidence interval downwards. 
+
+# Citation
+Raghunath, Dhruv. “DhruvRaghunath_A5.” 12 Oct. 2020. 
